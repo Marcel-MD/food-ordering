@@ -47,6 +47,7 @@ func (om *OrderManager) ManageOrder(order Order) OrderResponse {
 			log.Fatal().Err(err).Msg("Error decoding order response")
 		}
 
+		orderResponse.RestaurantAddress = restaurant.Address
 		response.Orders = append(response.Orders, orderResponse)
 		log.Debug().Int64("order_id", order.OrderId).Str("restaurant", restaurant.Name).Msg("Order sent to restaurant")
 	}
