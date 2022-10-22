@@ -70,6 +70,21 @@ func main() {
 		json.NewEncoder(w).Encode(orderResponse)
 	}).Methods("POST")
 
+	r.HandleFunc("/rating", func(w http.ResponseWriter, r *http.Request) {
+		var rating domain.Rating
+		err := json.NewDecoder(r.Body).Decode(&rating)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		log.Debug().Int("client_id", rating.ClientId).Msg("Received rating")
+
+		om.ManageRating(rating)
+
+		w.WriteHeader(http.StatusOK)
+	}).Methods("POST")
+
 	http.ListenAndServe(":"+cfg.FoodOrderingPort, r)
 }
 
